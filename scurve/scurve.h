@@ -7,27 +7,36 @@
 // obtain one at http://mozilla.org/MPL/2.0/.
 
 // Original : Aug. 29, 2014  Last Modification : Sep. 22, 2023
-#pragma once
-
-#include "fpoint.h"
+#ifndef SCURVE_H
+#define SCURVE_H
+#include <cassert>
+#include "spoint.h"
 
 namespace scurve
 {
+#ifndef _out_
+#	define _out_
+#endif
 
-class Sspline{
+class Sspline 
+{
 public:
-	FPoint* pt_P = nullptr;
-	int ptNum_P;	//
+	Sspline() = default;
+	Sspline(int n, Spoint* pts) { initCurve(n, pts); }
 
-	double* t_P = nullptr;	//
-	Vector3D* dP_P = nullptr;	//
-public:
-	Sspline();
-	Sspline(int N, FPoint* pt);	//
+	double chordLength(int section) { assert(section >= 0 && section <= _numpts); return _t[section]; }
+	Spoint curvept(double t, int section);
+protected:
+	void chasingMethod(const double* a, const double* b, const double* c, const Vector3D* f, int n, _out_ Vector3D* x);
+	void initCurve(int n, Spoint* pts);
+private:
+	int _numpts;				// sampling points number
+	Spoint* _pts = nullptr;
 
-	void ChasingMethod_P(const double a[], const double b[], const double c[], const Vector3D f[], const int n, /*[out]*/Vector3D x[]);
-	void InitCurveP(int N, FPoint* pt);	//P(t)
-	FPoint CurveP(double t, int curSection);
+	double* _t = nullptr;		// chord length of sections
+	Vector3D* _dp = nullptr;	// point derivative (t)
 };
 
 }
+
+#endif
