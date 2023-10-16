@@ -10,6 +10,7 @@
 #ifndef SCURVE_H
 #define SCURVE_H
 #include <cassert>
+#include <cstring>
 #include "spoint.h"
 
 namespace scurve
